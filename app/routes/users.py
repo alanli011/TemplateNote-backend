@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from sqlalchemy import and_
 from ..auth import requires_auth
 from flask_cors import cross_origin
@@ -17,12 +17,13 @@ def get_users():
     return jsonify(all_users)
 
 
-@bp.route('/users/<user_id>')
+@bp.route('/users/<int:id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
-def get_user():
-    data = request.json
-    user = User.query.filter_by(email=data['email']).first()
-    return jsonify(user)
+def get_user(id):
+    user = User.query.get(id)
+    if user is None:
+        abort(404)
+    return jsonify(user.to_dict())
 
 
 @bp.route('/users', methods=['POST'])
@@ -41,3 +42,13 @@ def create_user():
         new = {"newUserId": new_user.id, "newEmail": new_user.email,
                "newUsername": new_user.username}
         return new
+
+
+@bp.route('/users/<int:id>', methods=['DELETE'])
+@cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
+def delete_user(id):
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify(user.to_dict())

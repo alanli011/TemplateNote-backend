@@ -10,8 +10,6 @@ class User(db.Model):
     username = db.Column(db.String)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    notebooks = db.relationship('Notebook', back_populates='user')
-
     def to_dict(self):
         return {
             'id': self.id,
@@ -27,7 +25,7 @@ class NoteBook(db.Model):
     name = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    user = db.relationship('User', back_populates='notebooks')
+    user = db.relationship('User')
 
     def to_dict(self):
         return {
