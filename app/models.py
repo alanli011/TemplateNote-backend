@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+# creates the users table
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -18,6 +19,7 @@ class User(db.Model):
         }
 
 
+# create the notebooks table
 class NoteBook(db.Model):
     __tablename__ = 'notebooks'
 
@@ -25,6 +27,7 @@ class NoteBook(db.Model):
     name = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    # creates the relationship to the users table
     user = db.relationship('User')
 
     def to_dict(self):
