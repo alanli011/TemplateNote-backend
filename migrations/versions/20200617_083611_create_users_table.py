@@ -1,7 +1,7 @@
 """create users table
 
 Revision ID: bbad6dc534fe
-Revises: 
+Revises:
 Create Date: 2020-06-17 08:36:11.256544
 
 """
