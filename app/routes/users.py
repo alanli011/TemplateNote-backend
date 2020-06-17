@@ -6,6 +6,7 @@ from ..models import db, User
 bp = Blueprint('users', __name__, url_prefix="")
 
 
+# gets all users
 @bp.route('/users')
 @cross_origin(headers=["Content-Type", "Authorization"])
 def get_users():
@@ -16,6 +17,7 @@ def get_users():
     return jsonify(all_users)
 
 
+# get specific user based on id or url
 @bp.route('/users/<int:id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
 def get_user(id):
@@ -25,6 +27,7 @@ def get_user(id):
     return jsonify(user.to_dict())
 
 
+# create new users and log in user if user already exists
 @bp.route('/users', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 def create_user():
@@ -43,6 +46,7 @@ def create_user():
         return new
 
 
+# delete specific user based on id
 @bp.route('/users/<int:id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
