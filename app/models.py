@@ -36,3 +36,23 @@ class NoteBook(db.Model):
             'name': self.name,
             'user_id': self.user_id,
         }
+
+
+# create notes table
+class Note(db.Model):
+    __tablename__ = 'notes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False, default='Untitled')
+    content = db.Column(db.Text)
+    notebook_id = db.Column(db.Integer, db.ForeignKey('notebooks.id'), nullable=False)
+
+    notebook = db.relationship('Notebook')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'content': self.content
+            'user_id': self.user_id,
+        }
