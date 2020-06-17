@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import cross_origin, CORS
 from flask_migrate import Migrate
 from .config import Configuration
-from .routes import main, users, notebooks
+from .routes import main, users, notebooks, notes
 from .models import db
 from .auth import AuthError, requires_auth
 
@@ -11,6 +11,7 @@ app.config.from_object(Configuration)
 app.register_blueprint(main.bp)
 app.register_blueprint(users.bp)
 app.register_blueprint(notebooks.bp)
+app.register_blueprint(notes.bp)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 db.init_app(app)
 Migrate(app, db)
