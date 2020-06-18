@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, abort
 from ..auth import requires_auth
+from sqlalchemy import and_
 from flask_cors import cross_origin
 from ..models import db, User, NoteBook
 
@@ -10,7 +11,7 @@ bp = Blueprint('notebooks', __name__, url_prefix='')
 @bp.route('/users/<int:user_id>/notebooks')
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
-def get_notebooks(user_id):
+def get_notebooks():
     notebooks = NoteBook.query.filter(NoteBook.user_id == user_id).all()
     all_notebooks = []
     for notebook in notebooks:
@@ -19,11 +20,11 @@ def get_notebooks(user_id):
 
 
 # get specific notebook based on id
-@bp.route('/notebooks/<int:id>')
+@bp.route('/users/<int:user_id>/notebooks/<int:id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
-def get_notebook(id):
-    notebook = NoteBook.query.get(id)
+def get_notebook(user_id, id):
+    notebook = NoteBook.query.filter(and_(NoteBook.id == id, NoteBook.user_id == user_id)).first()
     if notebook is None:
         abort(404)
     return jsonify(notebook.to_dict())
@@ -35,7 +36,6 @@ def get_notebook(id):
 @requires_auth
 def create_notebook():
     data = request.json
-    print(data)
     new_notebook = NoteBook(
         name=data['name'],
         user_id=data['user_id']
