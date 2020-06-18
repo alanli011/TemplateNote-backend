@@ -10,6 +10,7 @@ bp = Blueprint('tags', __name__, url_prefix='')
 # create route for adding tags with association to notes
 @bp.route('/notes/<int:note_id>/tags', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def create_note_tag(note_id):
     data = request.json
     note = Note.query.get(note_id)
@@ -26,6 +27,7 @@ def create_note_tag(note_id):
 # create route for adding tags without note
 @bp.route('/tags', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def create_tag():
     data = request.json
     new_tag = Tag(
@@ -39,6 +41,7 @@ def create_tag():
 # this route will get all the tags from the database. need to come back to try and figure out how to limit it by user created??
 @bp.route('/tags')
 @cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def get_tags():
     tags = Tag.query.all()
     all_tags = [tag.to_dict() for tag in tags]
@@ -48,6 +51,7 @@ def get_tags():
 # returns one specific tag based on id
 @bp.route('/tags/<int:id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def get_one_tag(id):
     tag = Tag.query.get(id)
     if tag is None:
@@ -58,6 +62,7 @@ def get_one_tag(id):
 # route to delete specific tag based on id
 @bp.route('/tags/<int:id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def delete_tag(id):
     tag = Tag.query.get(id)
     db.session.delete(tag)

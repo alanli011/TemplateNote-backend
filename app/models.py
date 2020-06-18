@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+# create table to join the tags and the notes table
 note_tags = db.Table('note_tags',
                      db.Column('note_id', db.Integer, db.ForeignKey('notes.id'), primary_key=True),
                      db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True))
@@ -17,6 +18,7 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
 
     notebook = db.relationship('NoteBook', back_populates='user')
+    templates = db.relationship('Template', back_populates='user')
 
     def to_dict(self):
         return {
@@ -67,6 +69,7 @@ class Note(db.Model):
         }
 
 
+# create tags table
 class Tag(db.Model):
     __tablename__ = 'tags'
 
@@ -79,4 +82,29 @@ class Tag(db.Model):
         return {
             'id': self.id,
             'name': self.name
+        }
+
+
+# create templates table
+class Template(db.Model):
+    __tablename__ = 'templates'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    content = db.Column(db.Text)
+    public = db.Column(db.Boolean, default=False)
+    private = db.Column(db.Boolean, default=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    # create association between user and templates
+    user = db.relationship('User', back_populates='templates')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'content': self.content,
+            'public': self.public,
+            'private': self.private,
+            'user_id': self.user_id
         }
