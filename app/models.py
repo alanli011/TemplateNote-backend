@@ -56,7 +56,7 @@ class Note(db.Model):
     notebook_id = db.Column(db.Integer, db.ForeignKey('notebooks.id'), nullable=False)
 
     notebook = db.relationship('NoteBook', back_populates='notes')
-    tag = db.relationship('Tag', secondary=note_tags, back_populates='note')
+    tags = db.relationship('Tag', secondary='note_tags', back_populates='notes')
 
     def to_dict(self):
         return {
@@ -73,7 +73,7 @@ class Tag(db.Model):
     id = id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
 
-    note = db.relationship('Note', secondary=note_tags, back_populates='tag')
+    notes = db.relationship('Note', secondary='note_tags', back_populates='tags')
 
     def to_dict(self):
         return {
