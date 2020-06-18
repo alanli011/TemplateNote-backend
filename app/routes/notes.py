@@ -2,11 +2,12 @@ from flask import Blueprint, jsonify, request, abort
 from sqlalchemy import and_
 from ..auth import requires_auth
 from flask_cors import cross_origin
-from ..models import db, User, NoteBook, Note
+from ..models import db, User, NoteBook, Note, Tag
 
 bp = Blueprint('notes', __name__, url_prefix='')
 
 
+# route to get all the notes associated with user_id and notebook_id
 @bp.route('/users/<int:user_id>/notebooks/<int:notebooks_id>/notes')
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
@@ -16,6 +17,7 @@ def get_notes(user_id, notebooks_id):
     return jsonify(all_notes)
 
 
+# route to get one note associated with user_id and notebook_id
 @bp.route('/users/<int:user_id>/notebooks/<int:notebooks_id>/notes/<int:notes_id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
@@ -26,6 +28,7 @@ def get_note_id(user_id, notebooks_id, notes_id):
     return jsonify(note.to_dict())
 
 
+# route to create notes
 @bp.route('/notes', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
@@ -41,6 +44,7 @@ def create_note():
     return jsonify(data)
 
 
+# route to delete specific note
 @bp.route('/notebooks/<int:notebooks_id>/notes/<int:notes_id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
