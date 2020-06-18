@@ -18,13 +18,13 @@ def get_notes(user_id, notebooks_id):
 @bp.route('/notebooks/<int:notebooks_id>/notes/<int:notes_id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
 def get_note_id(user_id, notebooks_id, notes_id):
-    note = NoteBook.query.get(id)
+    note = NoteBook.query.filter(and_(NoteBook.user_id == user_id, Note.id == notes_id, Note.notebook_id == notebooks_id))
     if note is None:
         abort(404)
     return jsonify(note.to_dict())
 
 
-@bp.route('/notebooks/<int:notebooks_id>/notes', methods=['POST'])
+@bp.route('/notes', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 def create_note(notebooks_id):
     data = request.json
