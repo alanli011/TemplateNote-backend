@@ -18,7 +18,7 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
 
     notebook = db.relationship('NoteBook', back_populates='user')
-    templates = db.relationship('User', back_populates='user')
+    templates = db.relationship('Template', back_populates='user')
 
     def to_dict(self):
         return {
