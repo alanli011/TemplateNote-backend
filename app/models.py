@@ -3,6 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+note_tags = db.Table('note_tags',
+                     db.Column('note_id', db.Integer, db.ForeignKey('notes.id'), primary_key=True),
+                     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True))
+
+
 # creates the users table
 class User(db.Model):
     __tablename__ = 'users'
@@ -51,6 +56,7 @@ class Note(db.Model):
     notebook_id = db.Column(db.Integer, db.ForeignKey('notebooks.id'), nullable=False)
 
     notebook = db.relationship('NoteBook', back_populates='notes')
+    tag = db.relationship('Tag', secondary=note_tags, back_populates='note')
 
     def to_dict(self):
         return {
@@ -58,4 +64,19 @@ class Note(db.Model):
             'title': self.title,
             'content': self.content,
             'notebook_id': self.notebook_id,
+        }
+
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+
+    id = id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+
+    note = db.relationship('Note', secondary=note_tags, back_populates='tag')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
         }
