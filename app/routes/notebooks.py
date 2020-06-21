@@ -10,8 +10,8 @@ bp = Blueprint('notebooks', __name__, url_prefix='')
 # gets all notebooks for specific user
 @bp.route('/users/<int:user_id>/notebooks')
 @cross_origin(headers=["Content-Type", "Authorization"])
-@requires_auth
-def get_notebooks():
+# @requires_auth
+def get_notebooks(user_id):
     notebooks = NoteBook.query.filter(NoteBook.user_id == user_id).all()
     all_notebooks = []
     for notebook in notebooks:
@@ -22,7 +22,7 @@ def get_notebooks():
 # get specific notebook based on id
 @bp.route('/users/<int:user_id>/notebooks/<int:id>')
 @cross_origin(headers=["Content-Type", "Authorization"])
-@requires_auth
+# @requires_auth
 def get_notebook(user_id, id):
     notebook = NoteBook.query.filter(and_(NoteBook.id == id, NoteBook.user_id == user_id)).first()
     if notebook is None:
@@ -33,7 +33,7 @@ def get_notebook(user_id, id):
 # creates a new notebook
 @bp.route('/notebooks', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
-@requires_auth
+# @requires_auth
 def create_notebook():
     data = request.json
     new_notebook = NoteBook(
@@ -48,7 +48,7 @@ def create_notebook():
 # delete specific notebook based on id
 @bp.route('/notebooks/<int:id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
-@requires_auth
+# @requires_auth
 def delete_notebook(id):
     notebook = Notebook.query.get(id)
     db.session.delete(notebook)
