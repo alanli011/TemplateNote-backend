@@ -45,6 +45,18 @@ def create_notebook():
     return jsonify(data)
 
 
+# Updates specific notebook
+@bp.route('/users/<int:user_id>/notebooks/<int:id>', methods=['PUT'])
+@cross_origin(headers=["Content-Type", "Authorization"])
+# @requires_auth
+def update_notebook(user_id, id):
+    data = request.json
+    notebook = NoteBook.query.get(id)
+    setattr(notebook, 'name', data['name'])
+    db.session.commit()
+    return jsonify(data)
+
+
 # delete specific notebook based on id
 @bp.route('/notebooks/<int:id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
