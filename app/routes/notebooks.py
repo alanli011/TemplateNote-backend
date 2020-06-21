@@ -12,7 +12,7 @@ bp = Blueprint('notebooks', __name__, url_prefix='')
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def get_notebooks(user_id):
-    notebooks = NoteBook.query.filter(NoteBook.user_id == user_id).all()
+    notebooks = NoteBook.query.filter(NoteBook.user_id == user_id).order_by(NoteBook.id).all()
     all_notebooks = []
     for notebook in notebooks:
         all_notebooks.append(notebook.to_dict())
