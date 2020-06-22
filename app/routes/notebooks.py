@@ -31,14 +31,14 @@ def get_notebook(user_id, id):
 
 
 # creates a new notebook
-@bp.route('/notebooks', methods=['POST'])
+@bp.route('/users/<int:user_id>/notebooks', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
-def create_notebook():
+def create_notebook(user_id):
     data = request.json
     new_notebook = NoteBook(
         name=data['name'],
-        user_id=data['user_id']
+        user_id=user_id
     )
     db.session.add(new_notebook)
     db.session.commit()
