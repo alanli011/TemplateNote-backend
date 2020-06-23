@@ -42,7 +42,7 @@ def create_notebook(user_id):
     )
     db.session.add(new_notebook)
     db.session.commit()
-    return jsonify(data)
+    return jsonify(new_notebook.to_dict())
 
 
 # Updates specific notebook
@@ -62,7 +62,7 @@ def update_notebook(user_id, id):
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def delete_notebook(id):
-    notebook = Notebook.query.get(id)
+    notebook = NoteBook.query.get(id)
     db.session.delete(notebook)
     db.session.commit()
     return jsonify(notebook.to_dict())
