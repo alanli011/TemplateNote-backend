@@ -31,18 +31,18 @@ def get_notebook(user_id, id):
 
 
 # creates a new notebook
-@bp.route('/notebooks', methods=['POST'])
+@bp.route('/users/<int:user_id>/notebooks', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
-def create_notebook():
+def create_notebook(user_id):
     data = request.json
     new_notebook = NoteBook(
         name=data['name'],
-        user_id=data['user_id']
+        user_id=user_id
     )
     db.session.add(new_notebook)
     db.session.commit()
-    return jsonify(data)
+    return jsonify(new_notebook.to_dict())
 
 
 # Updates specific notebook
@@ -62,7 +62,7 @@ def update_notebook(user_id, id):
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def delete_notebook(id):
-    notebook = Notebook.query.get(id)
+    notebook = NoteBook.query.get(id)
     db.session.delete(notebook)
     db.session.commit()
     return jsonify(notebook.to_dict())
