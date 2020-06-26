@@ -45,10 +45,10 @@ def create_note():
 
 
 # route to delete specific note
-@bp.route('/notebooks/<int:notebooks_id>/notes/<int:notes_id>')
+@bp.route('/notebooks/<int:notebooks_id>/notes/<int:notes_id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
-def delete_note(notes_id):
+def delete_note(notes_id, notebooks_id):
     note = Note.query.get(notes_id)
     db.session.delete(note)
     db.session.commit()
