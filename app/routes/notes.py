@@ -44,6 +44,20 @@ def create_note():
     return jsonify(new_note.to_dict())
 
 
+# Updates specific notebook
+@bp.route('/users/<int:user_id>/notebooks/<int:notebook_id>/notes/<int:note_id>', methods=['PUT'])
+@cross_origin(headers=["Content-Type", "Authorization"])
+# @requires_auth
+def update_notebook(user_id, notebook_id, note_id):
+    data = request.json
+    note = Note.query.get(note_id)
+    setattr(note, 'title', data['title'])
+    setattr(note, 'content', data['content'])
+    setattr(note, 'notebook_id', notebook_id)
+    db.session.commit()
+    return jsonify(note.to_dict())
+
+
 # route to delete specific note
 @bp.route('/notebooks/<int:notebooks_id>/notes/<int:notes_id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
