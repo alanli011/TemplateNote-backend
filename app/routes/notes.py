@@ -29,15 +29,15 @@ def get_note_id(user_id, notebooks_id, notes_id):
 
 
 # route to create notes
-@bp.route('/notes', methods=['POST'])
+@bp.route('/notebooks/<int:notebook_id>/notes', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
-def create_note():
+def create_note(notebook_id):
     data = request.json
     new_note = Note(
         title=data['title'],
         content=data['content'],
-        notebook_id=data['notebook_id']
+        notebook_id=notebook_id
     )
     db.session.add(new_note)
     db.session.commit()
