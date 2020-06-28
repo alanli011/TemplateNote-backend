@@ -67,7 +67,7 @@ def create_template_for_user():
 
 
 # route to delete template
-@bp.route('/templates/<int:template_id>', methods=['POST'])
+@bp.route('/templates/<int:template_id>', methods=['DELETE'])
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def delete_template(template_id):
