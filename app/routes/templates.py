@@ -34,7 +34,7 @@ def get_one_template(template_id):
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def get_all_templates_for_user(user_id):
-    templates = Template.query.filter(Template.user_id == user_id).all
+    templates = Template.query.filter(Template.user_id == user_id).all()
     all_templates = [template.to_dict() for template in templates]
     return jsonify(all_templates)
 
