@@ -1,0 +1,12 @@
+flask
+flask-sqlalchemy
+alembic
+flask-migrate
+python-dotenv
+psycopg2-binary
+sqlalchemy
+wtforms
+flask-wtf
+python-jose
+flask-cors
+six
