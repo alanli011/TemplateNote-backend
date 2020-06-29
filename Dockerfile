@@ -5,4 +5,4 @@ WORKDIR /app
 COPY . /app
 EXPOSE 8080
 RUN pip install -r requirements.txt
-CMD python3 prova.py
+CMD python3 templatenote.py
