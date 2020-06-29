@@ -10,3 +10,4 @@ flask-wtf
 python-jose
 flask-cors
 six
+waitress
