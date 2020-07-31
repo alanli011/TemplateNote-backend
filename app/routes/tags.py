@@ -24,6 +24,15 @@ def create_note_tag(note_id):
     return jsonify(new_tag.to_dict())
 
 
+@bp.route('/notes/<int:note_id>/tags')
+@cross_origin(headers=["Content-Type", "Authorization"])
+def get_notes_tags(note_id):
+    query = Tag.query.join(Note, Tag.notes)
+    tags = query.order_by(Tag.name).all()
+    all_tags = [tag.to_dict() for tag in tags]
+    return jsonify(all_tags)
+
+
 # create route for adding tags without note
 @bp.route('/tags', methods=['POST'])
 @cross_origin(headers=["Content-Type", "Authorization"])
