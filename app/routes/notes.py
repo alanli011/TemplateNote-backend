@@ -67,3 +67,15 @@ def delete_note(notes_id, notebooks_id):
     db.session.delete(note)
     db.session.commit()
     return jsonify(note.to_dict())
+
+
+# Search notes
+@bp.route('/notebooks/<int:notebooks_id>/notes/search?=<string:string_input>')
+@cross_origin(headers=["Content-Type", "Authorization"])
+# @requires_auth
+def find_notes(notebooks_id, string_input):
+    # print(stringInput)
+    search_notes = Note.query.filter(Note.title.contains("%stringInput%"))
+    # print(search_notes)
+    all_search = [search_notes.to_dict() for note in search_notes]
+    return jsonify(all_search)
