@@ -12,6 +12,7 @@ bp = Blueprint('notes', __name__, url_prefix='')
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def get_notes(user_id, notebooks_id):
+    # filters out the notes where notebook id is equal to what's coming in and the user id
     notes = Note.query.filter(and_(Note.notebook_id == notebooks_id, NoteBook.user_id == user_id)).all()
     all_notes = [note.to_dict() for note in notes]
     return jsonify(all_notes)
@@ -22,6 +23,7 @@ def get_notes(user_id, notebooks_id):
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def get_note_id(user_id, notebooks_id, notes_id):
+    # filters out the notes where notebook id is equal to what's coming in and the user id
     note = Note.query.filter(and_(NoteBook.user_id == user_id, Note.id == notes_id, Note.notebook_id == notebooks_id)).first()
     if note is None:
         abort(404)
@@ -33,6 +35,7 @@ def get_note_id(user_id, notebooks_id, notes_id):
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def create_note(notebook_id):
+    # set data to be what comes in from the client side for POST
     data = request.json
     new_note = Note(
         title=data['title'],
@@ -49,8 +52,10 @@ def create_note(notebook_id):
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
 def update_notebook(user_id, notebook_id, note_id):
+    # grabs data from the request
     data = request.json
     note = Note.query.get(note_id)
+    # updating the current database with the setattr
     setattr(note, 'title', data['title'])
     setattr(note, 'content', data['content'])
     setattr(note, 'notebook_id', notebook_id)
@@ -70,12 +75,10 @@ def delete_note(notes_id, notebooks_id):
 
 
 # Search notes
-@bp.route('/notebooks/<int:notebooks_id>/notes/search?=<string:string_input>')
+@bp.route('/notebooks/<int:notebooks_id>/notes/search')
 @cross_origin(headers=["Content-Type", "Authorization"])
 # @requires_auth
-def find_notes(notebooks_id, string_input):
-    # print(stringInput)
-    search_notes = Note.query.filter(Note.title.contains("%stringInput%"))
-    # print(search_notes)
+def find_notes(notebooks_id):
+    search_notes = Note.query.filter(Note.content.op('regexp')(r'\b{}\b'.format(request.query_string))).all()
     all_search = [search_notes.to_dict() for note in search_notes]
     return jsonify(all_search)
